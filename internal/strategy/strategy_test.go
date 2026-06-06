@@ -89,7 +89,7 @@ func (e *errorBackend) Get(_ context.Context, _ string) ([]byte, error) { return
 func (e *errorBackend) Set(_ context.Context, _ string, _ []byte, _ time.Duration) error {
 	return nil
 }
-func (e *errorBackend) Delete(_ context.Context, _ string) error               { return nil }
+func (e *errorBackend) Delete(_ context.Context, _ string) error { return nil }
 func (e *errorBackend) SetNX(_ context.Context, _ string, _ []byte, _ time.Duration) (bool, error) {
 	return true, nil
 }

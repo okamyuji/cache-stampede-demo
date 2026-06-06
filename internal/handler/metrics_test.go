@@ -52,7 +52,6 @@ func TestMetricsReset(t *testing.T) {
 	}
 }
 
-
 func TestRequireAdminKey_Enforced(t *testing.T) {
 	inner := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)

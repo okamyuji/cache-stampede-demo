@@ -27,7 +27,7 @@ func (m *mockStore) FetchProduct(_ context.Context, id int64) (*domain.Product, 
 }
 
 func (m *mockStore) SeedProducts(_ context.Context, _ int) error { return nil }
-func (m *mockStore) Ping(_ context.Context) error               { return nil }
+func (m *mockStore) Ping(_ context.Context) error                { return nil }
 
 type mockStrategy struct{}
 
@@ -202,8 +202,8 @@ func TestSecurityHeaders(t *testing.T) {
 
 	headers := map[string]string{
 		"X-Content-Type-Options": "nosniff",
-		"X-Frame-Options":       "DENY",
-		"Referrer-Policy":       "strict-origin-when-cross-origin",
+		"X-Frame-Options":        "DENY",
+		"Referrer-Policy":        "strict-origin-when-cross-origin",
 	}
 	for key, want := range headers {
 		got := w.Header().Get(key)

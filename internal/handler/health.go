@@ -25,7 +25,6 @@ func NewHealthHandler(store port.ProductStore, redis Pinger) *HealthHandler {
 	return &HealthHandler{store: store, redis: redis}
 }
 
-
 // Health ヘルスチェック(プロセス生存確認のみ)
 func (h *HealthHandler) Health(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
