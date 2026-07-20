@@ -4,6 +4,12 @@ import { check } from 'k6';
 const STRATEGY = __ENV.STRATEGY || 'naive';
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 const PRODUCT_ID = __ENV.PRODUCT_ID || '1';
+const ADMIN_KEY = __ENV.ADMIN_KEY || '';
+
+// サーバー側でADMIN_KEYが設定されている場合、管理エンドポイントはX-Admin-Keyを要求する
+const adminParams = ADMIN_KEY
+  ? { headers: { 'X-Admin-Key': ADMIN_KEY } }
+  : {};
 
 export const options = {
   scenarios: {
@@ -21,11 +27,21 @@ export const options = {
 };
 
 export function setup() {
-  const clearRes = http.post(`${BASE_URL}/cache/clear`);
-  check(clearRes, { 'cache cleared': (r) => r.status === 200 });
+  // 初期化に失敗したまま計測すると古いキャッシュと累積メトリクスで比較結果が汚染されるため、
+  // 200以外は即座に試験全体を中断する
+  const clearRes = http.post(`${BASE_URL}/cache/clear`, null, adminParams);
+  if (clearRes.status !== 200) {
+    throw new Error(
+      `cache clear failed: status=${clearRes.status} (ADMIN_KEYの設定を確認してください)`
+    );
+  }
 
-  const resetRes = http.post(`${BASE_URL}/metrics/reset`);
-  check(resetRes, { 'metrics reset': (r) => r.status === 200 });
+  const resetRes = http.post(`${BASE_URL}/metrics/reset`, null, adminParams);
+  if (resetRes.status !== 200) {
+    throw new Error(
+      `metrics reset failed: status=${resetRes.status} (ADMIN_KEYの設定を確認してください)`
+    );
+  }
 }
 
 export default function () {
